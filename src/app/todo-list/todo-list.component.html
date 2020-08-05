@@ -1,0 +1,37 @@
+<div>
+    <h2>Todo list</h2>
+    <p>{{tasks.length | plural:'task':'tasks'}} in the list</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th><select [(ngModel)]="sortField">
+                    <option value="id">Id</option>
+                    <option value="name">Name</option>
+                    <option value="importance">Importance</option>
+                    <option value="dueDate">Due date</option>
+                </select></th>
+                <th><input [(ngModel)]="nameFilter" placeHolder="Name" /></th>
+                <th><input [(ngModel)]="descriptionFilter" placeHolder="Description" /></th>
+                <th>Importance</th>
+                <th>Due date</th>
+                <th>Is completed</th>
+                <th><a [routerLink]="['/task', -1]">Create</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let task of tasks | sort: sortField; let o=odd">
+                <tr *ngIf="canShow(task)" [ngStyle]="o && {'background': 'lightgray'}">
+                    <td>{{task.id}}</td>
+                    <td><a [routerLink]="['/task', task.id]">{{task.name}}</a></td>
+                    <td>{{task.description}}</td>
+                    <td>{{ImportanceClass[task.importance]}}</td>
+                    <td [ngClass]="{dueDateNotPassed: !isDueDatePassed(task.dueDate), dueDatePassed: isDueDatePassed(task.dueDate)}">
+                        {{task.dueDate | date:'short':'':'de'}}
+                    </td>
+                    <td>{{task.isCompleted}}</td>
+                    <td><button (click)="deleteTask(task)">Delete</button></td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+</div>
